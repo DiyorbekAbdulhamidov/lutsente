@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google"; // Yoki Inter
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const font = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Lutsente — Wi-Fi orqali biznesingizni o'stiring",
-  description: "Mijozlar kontaktlarini yig'ing va takroriy sotuvlarni oshiring.",
+  title: "Lutsente — Biznes o‘sishi uchun aqlli Wi-Fi",
+  description: "Mijozlar oqimini daromadga aylantiring.",
 };
 
 export default function RootLayout({
@@ -16,7 +16,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="uz" className="scroll-smooth">
-      <body className={`${inter.className} bg-white text-slate-900 antialiased`}>
+      <body className={`${font.className} antialiased bg-[#F8FAFC] text-slate-900 overflow-x-hidden selection:bg-blue-600 selection:text-white`}>
+        {/* Orqa fondagi premium "Mesh" effekti */}
+        <div className="fixed inset-0 z-[-1]">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-400/20 blur-[120px]" />
+          <div className="absolute top-[20%] right-[-10%] w-[30%] h-[50%] rounded-full bg-indigo-400/20 blur-[120px]" />
+        </div>
         {children}
       </body>
     </html>
