@@ -423,7 +423,7 @@ const Pricing = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6">Investitsiya rejalari</h2>
-          <p className="text-slate-500 text-lg font-medium">Yashirin to'lovlarsiz. Biznesingiz hajbiga mos tarifni tanlang.</p>
+          <p className="text-slate-500 text-lg font-medium">Yashirin to'lovlarsiz. Biznesingiz hajmiga mos tarifni tanlang.</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8 items-start">
