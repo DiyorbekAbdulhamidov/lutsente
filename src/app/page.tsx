@@ -310,9 +310,9 @@ const Features = () => {
                 Har bir ulanish — bu sizning bazangizga yangi qonuniy telefon raqam. Endi reklamangiz aniq nishonga tegadi.
               </p>
             </div>
-            <div className="flex items-center gap-2 text-white font-bold text-sm mt-6 group cursor-pointer">
+            {/* <div className="flex items-center gap-2 text-white font-bold text-sm mt-6 group cursor-pointer">
               Batafsil o'qish <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </div>
+            </div> */}
           </motion.div>
         </div>
       </div>
