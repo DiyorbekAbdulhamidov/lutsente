@@ -629,69 +629,173 @@ const Pricing = () => {
 };
 
 // 6. CONTACT FORM (Responsive Fixed)
+// 6. CONTACT FORM (Bot integratsiyasi bilan)
+// 6. CONTACT FORM (Telegram linki bilan)
 const Contact = () => {
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    business: ""
+  });
+
+  const sendToTelegram = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const token = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
+
+    const message = `
+🚀 <b>YANGI ARIZA: LUTSENTE</b>
+
+👤 <b>Ism:</b> ${formData.name.toUpperCase()}
+📞 <b>Tel:</b> ${formData.phone}
+🏢 <b>Muassasa:</b> ${formData.business.toUpperCase()}
+    `;
+
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'HTML',
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({ name: "", phone: "", business: "" });
+      } else {
+        alert("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
+      }
+    } catch (error) {
+      console.error("Xato:", error);
+      alert("Internet aloqasini tekshiring.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-24 md:py-32 bg-white relative overflow-hidden">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="bg-slate-50 rounded-[3rem] p-8 md:p-16 border border-slate-100 shadow-2xl relative overflow-hidden">
-          {/* Decor blob */}
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-violet-100/50 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-100/50 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="relative z-10 text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6">Biznesingizni <span className="text-violet-600">o'stirishga</span> tayyormisiz?</h2>
-            <p className="text-slate-500 font-medium text-lg max-w-2xl mx-auto">
-              Mutaxassislarimiz 15 daqiqa ichida biznesingizni o'rganib chiqib, qaysi tarif sizga ko'proq foyda keltirishini hisoblab berishadi.
-            </p>
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6">
+              Biznesingizni <span className="text-violet-600">o'stirishga</span> tayyormisiz?
+            </h2>
           </div>
 
-          <form className="space-y-6 relative z-10 max-w-2xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="group">
-                <label className="text-xs font-bold uppercase text-slate-400 ml-4 mb-2 block tracking-wider">Ismingiz</label>
-                <input type="text" className="w-full p-5 bg-white rounded-2xl border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-violet-600 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm" placeholder="Ali Valiyev" />
-              </div>
-              <div className="group">
-                <label className="text-xs font-bold uppercase text-slate-400 ml-4 mb-2 block tracking-wider">Telefon raqamingiz</label>
-                <input type="text" className="w-full p-5 bg-white rounded-2xl border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-violet-600 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm" placeholder="+998 90 123 45 67" />
-              </div>
-            </div>
-            <div className="group">
-              <label className="text-xs font-bold uppercase text-slate-400 ml-4 mb-2 block tracking-wider">Muassasa nomi</label>
-              <input type="text" className="w-full p-5 bg-white rounded-2xl border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-violet-600 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm" placeholder="Restoran, Kafe yoki Mehmonxona nomi" />
-            </div>
+          <AnimatePresence mode="wait">
+            {!submitted ? (
+              <motion.form
+                key="contact-form"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onSubmit={sendToTelegram}
+                className="space-y-6 relative z-10 max-w-2xl mx-auto"
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="group">
+                    <label className="text-xs font-bold uppercase text-slate-400 ml-4 mb-2 block tracking-wider">Ismingiz</label>
+                    <input
+                      required
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full p-5 bg-white rounded-2xl border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-violet-600 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm"
+                      placeholder="Ali Valiyev"
+                    />
+                  </div>
+                  <div className="group">
+                    <label className="text-xs font-bold uppercase text-slate-400 ml-4 mb-2 block tracking-wider">Telefon raqamingiz</label>
+                    <input
+                      required
+                      type="text"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="w-full p-5 bg-white rounded-2xl border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-violet-600 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm"
+                      placeholder="+998 90 123 45 67"
+                    />
+                  </div>
+                </div>
+                <div className="group">
+                  <label className="text-xs font-bold uppercase text-slate-400 ml-4 mb-2 block tracking-wider">Muassasa nomi</label>
+                  <input
+                    required
+                    type="text"
+                    value={formData.business}
+                    onChange={(e) => setFormData({ ...formData, business: e.target.value })}
+                    className="w-full p-5 bg-white rounded-2xl border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-violet-600 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm"
+                    placeholder="Restoran, Kafe nomi"
+                  />
+                </div>
 
-            {/* Submit Button */}
-            <button className="w-full py-6 bg-slate-900 text-white rounded-2xl font-black text-xl shadow-xl hover:shadow-2xl hover:bg-violet-600 transition-all duration-300 transform hover:-translate-y-1">
-              Ariza qoldirish
-            </button>
+                <button
+                  disabled={loading}
+                  className={`w-full py-6 text-white rounded-2xl font-black text-xl shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${loading ? 'bg-slate-400' : 'bg-slate-900 hover:bg-violet-600 shadow-violet-200'}`}
+                >
+                  {loading ? "YUBORILMOQDA..." : "ARIZA QOLDIRISH"}
+                </button>
+              </motion.form>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-10 relative z-10"
+              >
+                <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle2 size={40} />
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-2">RAHMAT!</h3>
+                <p className="text-slate-500 font-medium mb-8">Arizangiz qabul qilindi. Tez orada siz bilan bog'lanamiz.</p>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-violet-600 transition-colors"
+                >
+                  Qaytish
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-            {/* Divider */}
-            <div className="relative flex py-2 items-center">
-              <div className="flex-grow border-t border-slate-200"></div>
-              <span className="flex-shrink-0 mx-4 text-slate-400 text-xs font-bold uppercase tracking-widest">Yoki</span>
-              <div className="flex-grow border-t border-slate-200"></div>
-            </div>
+          <div className="relative flex py-8 items-center max-w-2xl mx-auto">
+            <div className="flex-grow border-t border-slate-200"></div>
+            <span className="flex-shrink-0 mx-4 text-slate-400 text-xs font-bold uppercase tracking-widest">Yoki</span>
+            <div className="flex-grow border-t border-slate-200"></div>
+          </div>
 
-            {/* Direct Call Button (Responsive Fix) */}
+          {/* Kontakt tugmalari (Phone & Telegram) */}
+          <div className="max-w-2xl mx-auto space-y-4">
             <a
               href="tel:+998956677577"
-              className="w-full py-4 sm:py-5 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-base sm:text-lg flex items-center justify-center gap-3 hover:border-violet-600 hover:text-violet-600 hover:bg-violet-50 transition-all duration-300 group"
+              className="w-full py-5 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-violet-600 hover:text-violet-600 transition-all group shadow-sm"
             >
-              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center group-hover:bg-violet-200 transition-colors flex-shrink-0">
-                <Phone size={20} className="text-slate-900 group-hover:text-violet-700" />
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:gap-2 leading-tight text-center sm:text-left">
-                <span>Hozir qo'ng'iroq qilish:</span>
-                <span className="font-black whitespace-nowrap">+998 95 667 75 77</span>
-              </div>
+              <Phone size={20} className="text-slate-400 group-hover:text-violet-600" />
+              <span>Qo'ng'iroq qilish: <b className="ml-1">+998 95 667 75 77</b></span>
             </a>
 
-            <p className="text-center text-xs text-slate-400 font-medium mt-4">
-              *Ma'lumotlaringiz sir saqlanadi va uchinchi shaxslarga berilmaydi.
-            </p>
-          </form>
+            <a
+              href="https://t.me/e_mythe"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-5 bg-[#0088cc] text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#0077b5] transition-all shadow-lg shadow-sky-200 group"
+            >
+              <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              <span>Telegram orqali yozish</span>
+            </a>
+          </div>
+
+          <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-8">
+            * Ma'lumotlaringiz xavfsizligi kafolatlanadi
+          </p>
         </div>
       </div>
     </section>
@@ -714,10 +818,10 @@ const Footer = () => (
         <a href="#" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-blue-500 hover:text-white transition-all duration-300">
           <Send size={18} className="-ml-0.5 mt-0.5" /> {/* Telegram */}
         </a>
-        <a href="#" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-pink-600 hover:text-white transition-all duration-300">
+        <a href="https://www.instagram.com/lutsente/" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-pink-600 hover:text-white transition-all duration-300">
           <Instagram size={18} />
         </a>
-        <a href="#" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-blue-700 hover:text-white transition-all duration-300">
+        <a href="https://www.linkedin.com/company/lutsente/" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-blue-700 hover:text-white transition-all duration-300">
           <Linkedin size={18} />
         </a>
       </div>
