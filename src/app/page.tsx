@@ -784,7 +784,7 @@ const Contact = () => {
                       if (e.target.value.length > 1) setErrors(prev => ({ ...prev, business: false }));
                     }}
                     className={`w-full p-5 bg-white rounded-2xl border-0 ring-1 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm ${errors.business ? 'ring-red-500' : 'ring-slate-200 focus:ring-2 focus:ring-violet-600'}`}
-                    placeholder="Restoran, Kafe nomi"
+                    placeholder=""
                   />
                   {errors.business && <span className="text-[10px] text-red-500 font-bold ml-4 mt-1">Muassasa nomini kiriting</span>}
                 </div>
