@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
-  Wifi, BarChart3, Users, Zap, CheckCircle2,
+  Cast, BarChart3, Users, Zap, CheckCircle2,
   ArrowRight, Smartphone, X, Menu,
-  PieChart, MessageSquare, Phone
+  PieChart, MessageSquare, Phone, Instagram, Linkedin, Send
 } from "lucide-react";
 
 // --- ANIMATION VARIANTS ---
@@ -56,10 +56,10 @@ const Navbar = () => {
             : "bg-transparent px-0 py-0"
             }`}>
             <div className="flex justify-between items-center">
-              {/* Logo */}
+              {/* Logo - Changed Icon to 'Cast' for uniqueness */}
               <a href="#" className="flex items-center gap-2.5 group">
-                <div className="w-10 h-10 bg-gradient-to-br from-violet-600 to-indigo-700 rounded-full flex items-center justify-center text-white shadow-violet-600/30 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <Wifi size={20} strokeWidth={3} />
+                <div className="w-10 h-10 bg-gradient-to-br from-violet-600 to-indigo-700 rounded-xl flex items-center justify-center text-white shadow-violet-600/30 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Cast size={20} strokeWidth={2.5} />
                 </div>
                 <span className="text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-violet-700 transition-colors">LUTSENTE</span>
               </a>
@@ -227,7 +227,7 @@ const Hero = () => {
             </div>
             {/* Card 3: Live Status */}
             <div className="bg-slate-900 p-6 rounded-[2rem] text-white relative overflow-hidden h-48 flex items-end shadow-xl">
-              <div className="absolute top-0 right-0 p-6 opacity-10"><Wifi size={80} /></div>
+              <div className="absolute top-0 right-0 p-6 opacity-10"><Cast size={80} /></div>
               <div className="relative z-10">
                 <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-xs font-bold mb-3 backdrop-blur-md">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" /> LIVE
@@ -336,6 +336,7 @@ const HowItWorks = () => {
         <div className="text-center mb-16 md:mb-24">
           <span className="text-violet-600 font-bold tracking-widest uppercase text-sm mb-2 block">Jarayon</span>
           <h2 className="text-3xl md:text-5xl font-black text-slate-900">Mijoz qanday qilib <br className="hidden md:block" /> bazaga tushadi?</h2>
+          <p className="text-slate-500 font-medium mt-4 max-w-2xl mx-auto">Biz Wi-Fi ulash bilan shug‘ullanmaymiz. Biz mavjud tarmog‘ingizga maxsus dasturiy ta'minot o‘rnatamiz.</p>
         </div>
 
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
@@ -346,8 +347,8 @@ const HowItWorks = () => {
               {
                 step: "01",
                 title: "Wi-Fi ga ulanish",
-                desc: "Mehmon muassasangizdagi bepul Wi-Fi tarmog'ini tanlaydi. Parol so'ralmaydi, ochiq tarmoq bo'ladi.",
-                icon: <Wifi className="w-6 h-6" />
+                desc: "Mijoz muassasangizdagi bepul Wi-Fi tarmog'ini tanlaydi. Parol so'ralmaydi, ochiq tarmoq bo'ladi.",
+                icon: <Cast className="w-6 h-6" />
               },
               {
                 step: "02",
@@ -358,7 +359,7 @@ const HowItWorks = () => {
               {
                 step: "03",
                 title: "Kontakt qoldirish",
-                desc: "Mehmon telefon raqamini kiritadi va SMS kod orqali internetga ulanadi. Siz esa real mijoz bazasiga ega bo'lasiz.",
+                desc: "Mijoz telefon raqamini kiritadi va SMS kod orqali internetga ulanadi. Siz esa real mijoz bazasiga ega bo'lasiz.",
                 icon: <CheckCircle2 className="w-6 h-6" />
               }
             ].map((item, i) => (
@@ -415,7 +416,7 @@ const HowItWorks = () => {
                   <div className="flex justify-between items-center px-8 pt-4 pb-2 text-slate-900 text-[12px] font-bold z-10">
                     <span className="pl-2">9:41</span>
                     <div className="flex gap-1.5 pr-2">
-                      <Wifi size={14} />
+                      <Cast size={14} />
                       <div className="w-5 h-3 bg-slate-900 rounded-[3px] relative overflow-hidden">
                         <div className="bg-white w-[1px] h-full absolute right-[1px]" />
                       </div>
@@ -433,7 +434,7 @@ const HowItWorks = () => {
                       className="mb-8 flex flex-col items-center"
                     >
                       <div className="w-20 h-20 bg-violet-600 rounded-[2rem] flex items-center justify-center text-white mb-4 shadow-lg shadow-violet-200">
-                        <Wifi size={40} strokeWidth={3} />
+                        <Cast size={40} strokeWidth={2.5} />
                       </div>
                       <span className="text-2xl font-black text-slate-900 tracking-tighter">LUTSENTE</span>
                     </motion.div>
@@ -627,8 +628,7 @@ const Pricing = () => {
   );
 };
 
-// 6. CONTACT FORM
-// 6. CONTACT FORM (Updated with Direct Call Button)
+// 6. CONTACT FORM (Responsive Fixed)
 const Contact = () => {
   return (
     <section id="contact" className="py-24 md:py-32 bg-white relative overflow-hidden">
@@ -673,15 +673,19 @@ const Contact = () => {
               <div className="flex-grow border-t border-slate-200"></div>
             </div>
 
-            {/* Direct Call Button */}
+            {/* Direct Call Button (Responsive Fix) */}
             <a
               href="tel:+998956677577"
-              className="w-full py-5 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 hover:border-violet-600 hover:text-violet-600 hover:bg-violet-50 transition-all duration-300 group"
+              className="w-full py-4 sm:py-5 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-base sm:text-lg flex items-center justify-center gap-3 hover:border-violet-600 hover:text-violet-600 hover:bg-violet-50 transition-all duration-300 group"
             >
-              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center group-hover:bg-violet-200 transition-colors">
+              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center group-hover:bg-violet-200 transition-colors flex-shrink-0">
                 <Phone size={20} className="text-slate-900 group-hover:text-violet-700" />
               </div>
-              <span>Hozir qo'ng'iroq qilish: <span className="font-black">+998 95 667 75 77</span></span>
+
+              <div className="flex flex-col sm:flex-row sm:gap-2 leading-tight text-center sm:text-left">
+                <span>Hozir qo'ng'iroq qilish:</span>
+                <span className="font-black whitespace-nowrap">+998 95 667 75 77</span>
+              </div>
             </a>
 
             <p className="text-center text-xs text-slate-400 font-medium mt-4">
@@ -694,16 +698,32 @@ const Contact = () => {
   );
 };
 
-// 7. FOOTER (Updated with Phone)
+// 7. FOOTER (Updated with Socials and Fixed Text)
 const Footer = () => (
   <footer className="py-12 bg-white text-center border-t border-slate-100">
-    <div className="flex flex-col items-center justify-center gap-4 mb-8">
+    <div className="flex flex-col items-center justify-center gap-6 mb-8">
+      {/* Brand */}
       <div className="flex items-center gap-2 opacity-80">
-        <div className="w-8 h-8 bg-violet-600 rounded-full flex items-center justify-center text-white">
-          <Wifi size={16} strokeWidth={3} />
+        <div className="w-8 h-8 bg-violet-600 rounded-xl flex items-center justify-center text-white">
+          <Cast size={16} strokeWidth={2.5} />
         </div>
         <span className="text-2xl font-black text-slate-900 tracking-tight">LUTSENTE</span>
       </div>
+
+      {/* Social Icons */}
+      <div className="flex items-center gap-4">
+        <a href="#" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-blue-500 hover:text-white transition-all duration-300">
+          <Send size={18} className="-ml-0.5 mt-0.5" /> {/* Telegram */}
+        </a>
+        <a href="#" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-pink-600 hover:text-white transition-all duration-300">
+          <Instagram size={18} />
+        </a>
+        <a href="#" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-blue-700 hover:text-white transition-all duration-300">
+          <Linkedin size={18} />
+        </a>
+      </div>
+
+      {/* Phone */}
       <a href="tel:+998956677577" className="text-xl font-bold text-slate-600 hover:text-violet-600 transition">
         +998 95 667 75 77
       </a>
