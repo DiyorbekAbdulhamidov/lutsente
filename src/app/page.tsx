@@ -631,17 +631,62 @@ const Pricing = () => {
 // 6. CONTACT FORM (Responsive Fixed)
 // 6. CONTACT FORM (Bot integratsiyasi bilan)
 // 6. CONTACT FORM (Telegram linki bilan)
+// 6. CONTACT FORM (Validatsiya va Telefon maskasi bilan)
 const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // Form ma'lumotlari
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
+    phone: "+998 ", // Boshlang'ich qiymat
     business: ""
   });
 
+  // Xatoliklarni boshqarish
+  const [errors, setErrors] = useState({
+    name: false,
+    phone: false,
+    business: false
+  });
+
+  // Telefon raqami o'zgarganda (Validatsiya va cheklov)
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value;
+
+    // +998 qismini majburiy qilish
+    if (!val.startsWith("+998 ")) {
+      val = "+998 ";
+    }
+
+    // Faqat raqamlarni qoldirish (bo'sh joydan keyin)
+    const prefix = "+998 ";
+    const numbersPart = val.slice(prefix.length).replace(/\D/g, "");
+
+    // Uzunlikni cheklash (9 ta raqam: 90 123 45 67)
+    if (numbersPart.length <= 9) {
+      setFormData({ ...formData, phone: prefix + numbersPart });
+      // Yozish paytida xatoni o'chirish
+      if (numbersPart.length === 9) setErrors(prev => ({ ...prev, phone: false }));
+    }
+  };
+
   const sendToTelegram = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validatsiya tekshiruvi
+    const isNameError = formData.name.trim().length < 3;
+    const isPhoneError = formData.phone.replace(/\D/g, "").length < 12; // +998 (3) + 9 ta raqam
+    const isBusinessError = formData.business.trim().length < 2;
+
+    setErrors({
+      name: isNameError,
+      phone: isPhoneError,
+      business: isBusinessError
+    });
+
+    if (isNameError || isPhoneError || isBusinessError) return;
+
     setLoading(true);
 
     const token = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
@@ -668,12 +713,11 @@ const Contact = () => {
 
       if (response.ok) {
         setSubmitted(true);
-        setFormData({ name: "", phone: "", business: "" });
+        setFormData({ name: "", phone: "+998 ", business: "" });
       } else {
-        alert("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
+        alert("Xatolik yuz berdi. Qaytadan urinib ko'ring.");
       }
     } catch (error) {
-      console.error("Xato:", error);
       alert("Internet aloqasini tekshiring.");
     } finally {
       setLoading(false);
@@ -706,41 +750,48 @@ const Contact = () => {
                   <div className="group">
                     <label className="text-xs font-bold uppercase text-slate-400 ml-4 mb-2 block tracking-wider">Ismingiz</label>
                     <input
-                      required
                       type="text"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full p-5 bg-white rounded-2xl border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-violet-600 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm"
-                      placeholder="Ali Valiyev"
+                      onChange={(e) => {
+                        setFormData({ ...formData, name: e.target.value });
+                        if (e.target.value.length > 2) setErrors(prev => ({ ...prev, name: false }));
+                      }}
+                      className={`w-full p-5 bg-white rounded-2xl border-0 ring-1 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm ${errors.name ? 'ring-red-500' : 'ring-slate-200 focus:ring-2 focus:ring-violet-600'}`}
+                      placeholder="Ism Familya"
                     />
+                    {errors.name && <span className="text-[10px] text-red-500 font-bold ml-4 mt-1">Kamida 3 ta harf kiriting</span>}
                   </div>
+
                   <div className="group">
                     <label className="text-xs font-bold uppercase text-slate-400 ml-4 mb-2 block tracking-wider">Telefon raqamingiz</label>
                     <input
-                      required
-                      type="text"
+                      type="tel"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full p-5 bg-white rounded-2xl border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-violet-600 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm"
-                      placeholder="+998 90 123 45 67"
+                      onChange={handlePhoneChange}
+                      className={`w-full p-5 bg-white rounded-2xl border-0 ring-1 outline-none transition font-semibold text-slate-900 shadow-sm ${errors.phone ? 'ring-red-500' : 'ring-slate-200 focus:ring-2 focus:ring-violet-600'}`}
                     />
+                    {errors.phone && <span className="text-[10px] text-red-500 font-bold ml-4 mt-1">Raqamni to'liq kiriting</span>}
                   </div>
                 </div>
+
                 <div className="group">
                   <label className="text-xs font-bold uppercase text-slate-400 ml-4 mb-2 block tracking-wider">Muassasa nomi</label>
                   <input
-                    required
                     type="text"
                     value={formData.business}
-                    onChange={(e) => setFormData({ ...formData, business: e.target.value })}
-                    className="w-full p-5 bg-white rounded-2xl border-0 ring-1 ring-slate-200 focus:ring-2 focus:ring-violet-600 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm"
+                    onChange={(e) => {
+                      setFormData({ ...formData, business: e.target.value });
+                      if (e.target.value.length > 1) setErrors(prev => ({ ...prev, business: false }));
+                    }}
+                    className={`w-full p-5 bg-white rounded-2xl border-0 ring-1 outline-none transition font-semibold text-slate-900 placeholder:text-slate-300 shadow-sm ${errors.business ? 'ring-red-500' : 'ring-slate-200 focus:ring-2 focus:ring-violet-600'}`}
                     placeholder="Restoran, Kafe nomi"
                   />
+                  {errors.business && <span className="text-[10px] text-red-500 font-bold ml-4 mt-1">Muassasa nomini kiriting</span>}
                 </div>
 
                 <button
                   disabled={loading}
-                  className={`w-full py-6 text-white rounded-2xl font-black text-xl shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${loading ? 'bg-slate-400' : 'bg-slate-900 hover:bg-violet-600 shadow-violet-200'}`}
+                  className={`w-full py-6 text-white rounded-2xl font-black text-xl shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${loading ? 'bg-slate-400 cursor-not-allowed' : 'bg-slate-900 hover:bg-violet-600 shadow-violet-200'}`}
                 >
                   {loading ? "YUBORILMOQDA..." : "ARIZA QOLDIRISH"}
                 </button>
@@ -760,42 +811,29 @@ const Contact = () => {
                   onClick={() => setSubmitted(false)}
                   className="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-violet-600 transition-colors"
                 >
-                  Qaytish
+                  QAYTISH
                 </button>
               </motion.div>
             )}
           </AnimatePresence>
 
+          {/* Pastki qism o'zgarishsiz qoladi... */}
           <div className="relative flex py-8 items-center max-w-2xl mx-auto">
             <div className="flex-grow border-t border-slate-200"></div>
             <span className="flex-shrink-0 mx-4 text-slate-400 text-xs font-bold uppercase tracking-widest">Yoki</span>
             <div className="flex-grow border-t border-slate-200"></div>
           </div>
 
-          {/* Kontakt tugmalari (Phone & Telegram) */}
           <div className="max-w-2xl mx-auto space-y-4">
-            <a
-              href="tel:+998956677577"
-              className="w-full py-5 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-violet-600 hover:text-violet-600 transition-all group shadow-sm"
-            >
+            <a href="tel:+998956677577" className="w-full py-5 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold flex items-center justify-center gap-3 hover:border-violet-600 hover:text-violet-600 transition-all group shadow-sm">
               <Phone size={20} className="text-slate-400 group-hover:text-violet-600" />
               <span>Qo'ng'iroq qilish: <b className="ml-1">+998 95 667 75 77</b></span>
             </a>
-
-            <a
-              href="https://t.me/e_mythe"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-5 bg-[#0088cc] text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#0077b5] transition-all shadow-lg shadow-sky-200 group"
-            >
+            <a href="https://t.me/e_mythe" target="_blank" rel="noopener noreferrer" className="w-full py-5 bg-[#0088cc] text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#0077b5] transition-all shadow-lg shadow-sky-200 group">
               <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               <span>Telegram orqali yozish</span>
             </a>
           </div>
-
-          <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-8">
-            * Ma'lumotlaringiz xavfsizligi kafolatlanadi
-          </p>
         </div>
       </div>
     </section>
@@ -815,7 +853,7 @@ const Footer = () => (
 
       {/* Social Icons */}
       <div className="flex items-center gap-4">
-        <a href="#" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-blue-500 hover:text-white transition-all duration-300">
+        <a href="https://t.me/lutsente" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-blue-500 hover:text-white transition-all duration-300">
           <Send size={18} className="-ml-0.5 mt-0.5" /> {/* Telegram */}
         </a>
         <a href="https://www.instagram.com/lutsente/" className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-pink-600 hover:text-white transition-all duration-300">
