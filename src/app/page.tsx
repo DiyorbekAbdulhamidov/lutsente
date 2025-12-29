@@ -698,7 +698,6 @@ const Contact = () => {
   );
 };
 
-// 7. FOOTER (Updated with Socials and Fixed Text)
 const Footer = () => (
   <footer className="py-12 bg-white text-center border-t border-slate-100">
     <div className="flex flex-col items-center justify-center gap-6 mb-8">
