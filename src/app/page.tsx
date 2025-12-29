@@ -829,7 +829,7 @@ const Contact = () => {
               <Phone size={20} className="text-slate-400 group-hover:text-violet-600" />
               <span>Qo'ng'iroq qilish: <b className="ml-1">+998 95 667 75 77</b></span>
             </a>
-            <a href="https://t.me/e_mythe" target="_blank" rel="noopener noreferrer" className="w-full py-5 bg-[#0088cc] text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#0077b5] transition-all shadow-lg shadow-sky-200 group">
+            <a href="https://t.me/@lutsente_admin" target="_blank" rel="noopener noreferrer" className="w-full py-5 bg-[#0088cc] text-white rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#0077b5] transition-all shadow-lg shadow-sky-200 group">
               <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               <span>Telegram orqali yozish</span>
             </a>
