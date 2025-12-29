@@ -359,7 +359,7 @@ const HowItWorks = () => {
               {
                 step: "03",
                 title: "Kontakt qoldirish",
-                desc: "Mijoz telefon raqamini kiritadi va SMS kod orqali internetga ulanadi. Siz esa real mijoz bazasiga ega bo'lasiz.",
+                desc: "Mijoz telefon raqamini kiritadi va SMS kod orqali internetga ulanadi. Siz esa real mijozlar bazasiga ega bo'lasiz.",
                 icon: <CheckCircle2 className="w-6 h-6" />
               }
             ].map((item, i) => (
